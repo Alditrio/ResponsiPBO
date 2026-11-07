@@ -1,90 +1,75 @@
 public class PasienRawatInap extends Pasien implements LayananMedis, Pembayaran {
     private String nomorKamar;
     private int lamaMenginap;
-    private double tarifKamarPerHari;
-    private boolean butuhPerawatKhusus;
-    private String catatanLayanan;
+    private double tarifKamar;
+    private boolean perawatKhusus;
+    private String catatan;
 
     // Overloaded Constructor 1
-    public PasienRawatInap(String noRekamMedis, String nama, int usia, String nomorKamar, int lamaMenginap, double tarifKamarPerHari) {
+    public PasienRawatInap(String noRekamMedis, String nama, int usia, String nomorKamar, int lamaMenginap, double tarifKamar) {
         super(noRekamMedis, nama, usia);
         this.nomorKamar = nomorKamar;
         this.lamaMenginap = lamaMenginap;
-        this.tarifKamarPerHari = tarifKamarPerHari;
-        this.butuhPerawatKhusus = false;
-        this.catatanLayanan = "Rawat inap reguler";
+        this.tarifKamar = tarifKamar;
+        this.perawatKhusus = false;
+        this.catatan = "Rawat inap reguler";
     }
 
     // Overloaded Constructor 2
     public PasienRawatInap(String noRekamMedis, String nama, int usia, String statusPasien, double biayaDasar,
-                           String nomorKamar, int lamaMenginap, double tarifKamarPerHari, boolean butuhPerawatKhusus) {
+                           String nomorKamar, int lamaMenginap, double tarifKamar, boolean perawatKhusus) {
         super(noRekamMedis, nama, usia, statusPasien, biayaDasar);
         this.nomorKamar = nomorKamar;
         this.lamaMenginap = lamaMenginap;
-        this.tarifKamarPerHari = tarifKamarPerHari;
-        this.butuhPerawatKhusus = butuhPerawatKhusus;
-        this.catatanLayanan = "Rawat inap intensif";
+        this.tarifKamar = tarifKamar;
+        this.perawatKhusus = perawatKhusus;
+        this.catatan = "Rawat inap intensif";
     }
 
     @Override
     public void tampilkanInformasi() {
         super.tampilkanInformasi();
-        System.out.println("Tipe Layanan      : Rawat Inap");
-        System.out.println("Kamar             : " + this.nomorKamar);
-        System.out.println("Lama Menginap     : " + this.lamaMenginap + " hari");
-        System.out.println("Tarif Kamar/Hari  : Rp " + this.tarifKamarPerHari);
-        System.out.println("Perawat Khusus    : " + (this.butuhPerawatKhusus ? "Ya" : "Tidak"));
-        System.out.println("Catatan           : " + this.catatanLayanan);
-        System.out.println("======================================");
+        System.out.println("Kamar: " + this.nomorKamar);
+        System.out.println("Lama Menginap: " + this.lamaMenginap + " hari");
     }
 
     @Override
     public void prosesPemeriksaan(String keluhan) {
-        // Logika percabangan membaca dan mengubah state internal objek
         if (keluhan.equalsIgnoreCase("Kritis")) {
             this.setStatusPasien("ICU");
-            this.setButuhPerawatKhusus(true);
-            this.setBiayaDasar(this.getBiayaDasar() + 1000000.0);
-            this.catatanLayanan = "Dipindahkan ke ICU";
+            this.perawatKhusus = true;
+            this.setBiayaDasar(this.getBiayaDasar() + 500000.0);
         } else if (keluhan.equalsIgnoreCase("Sembuh")) {
-            this.setStatusPasien("Siap Pulang");
-            this.setButuhPerawatKhusus(false);
-            this.catatanLayanan = "Izin pulang diberikan";
+            this.setStatusPasien("Pulang");
+            this.perawatKhusus = false;
         } else {
-            this.setStatusPasien("Pemulihan");
-            this.catatanLayanan = "Perawatan rutin di kamar";
+            this.setStatusPasien("Rawat Reguler");
         }
     }
 
     @Override
     public void lakukanTindakanMedis(String tindakan) {
-        this.catatanLayanan = tindakan;
-        System.out.println("Tindakan medis untuk " + this.getNama() + ": " + tindakan);
+        this.catatan = tindakan;
+        System.out.println("Tindakan untuk " + this.getNama() + ": " + tindakan);
     }
 
     @Override
     public String getDetailLayanan() {
-        return "Rawat Inap " + this.nomorKamar + " - " + this.catatanLayanan;
+        return this.nomorKamar + " (" + this.catatan + ")";
     }
 
     @Override
     public double hitungTotalBiaya() {
-        double biayaKamar = this.lamaMenginap * this.tarifKamarPerHari;
-        double biayaPerawat = this.butuhPerawatKhusus ? (200000.0 * this.lamaMenginap) : 0.0;
-        double subtotal = this.getBiayaDasar() + biayaKamar + biayaPerawat;
+        double totalKamar = this.lamaMenginap * this.tarifKamar;
+        double subtotal = this.getBiayaDasar() + totalKamar;
         return subtotal + (subtotal * Pasien.TARIF_PAJAK);
     }
 
     @Override
     public void cetakKuitansi() {
-        System.out.println("---------- KUITANSI RAWAT INAP ----------");
-        System.out.println("Pasien            : " + this.getNama() + " (" + this.getNoRekamMedis() + ")");
-        System.out.println("Total Tagihan     : Rp " + hitungTotalBiaya());
-        System.out.println("Status            : LUNAS");
-        System.out.println("-----------------------------------------");
+        System.out.println("Kuitansi Rawat Inap: " + this.getNama() + " - Total: Rp " + hitungTotalBiaya());
     }
 
-    // Getter dan Setter
     public String getNomorKamar() {
         return this.nomorKamar;
     }
@@ -101,27 +86,27 @@ public class PasienRawatInap extends Pasien implements LayananMedis, Pembayaran 
         this.lamaMenginap = lamaMenginap;
     }
 
-    public double getTarifKamarPerHari() {
-        return this.tarifKamarPerHari;
+    public double getTarifKamar() {
+        return this.tarifKamar;
     }
 
-    public void setTarifKamarPerHari(double tarifKamarPerHari) {
-        this.tarifKamarPerHari = tarifKamarPerHari;
+    public void setTarifKamar(double tarifKamar) {
+        this.tarifKamar = tarifKamar;
     }
 
-    public boolean isButuhPerawatKhusus() {
-        return this.butuhPerawatKhusus;
+    public boolean isPerawatKhusus() {
+        return this.perawatKhusus;
     }
 
-    public void setButuhPerawatKhusus(boolean butuhPerawatKhusus) {
-        this.butuhPerawatKhusus = butuhPerawatKhusus;
+    public void setPerawatKhusus(boolean perawatKhusus) {
+        this.perawatKhusus = perawatKhusus;
     }
 
-    public String getCatatanLayanan() {
-        return this.catatanLayanan;
+    public String getCatatan() {
+        return this.catatan;
     }
 
-    public void setCatatanLayanan(String catatanLayanan) {
-        this.catatanLayanan = catatanLayanan;
+    public void setCatatan(String catatan) {
+        this.catatan = catatan;
     }
 }

@@ -1,5 +1,5 @@
 public abstract class Pasien {
-    public static final String NAMA_RUMAH_SAKIT = "RS Sehat Sentosa";
+    public static final String NAMA_RUMAH_SAKIT = "Rumah Sakit Aldi";
     public static final double TARIF_PAJAK = 0.11;
 
     private final String noRekamMedis;
@@ -22,27 +22,21 @@ public abstract class Pasien {
         this.biayaDasar = biayaDasar;
     }
 
-    // Prosedur void
     public void tampilkanInformasi() {
-        System.out.println("======================================");
-        System.out.println("Rumah Sakit       : " + NAMA_RUMAH_SAKIT);
-        System.out.println("No. Rekam Medis   : " + this.noRekamMedis);
-        System.out.println("Nama Pasien       : " + this.nama);
-        System.out.println("Usia              : " + this.usia + " tahun");
-        System.out.println("Status            : " + this.statusPasien);
-        System.out.println("Biaya Pendaftaran : Rp " + this.biayaDasar);
+        System.out.println("Rumah Sakit: " + NAMA_RUMAH_SAKIT);
+        System.out.println("No RM: " + this.noRekamMedis);
+        System.out.println("Nama: " + this.nama);
+        System.out.println("Usia: " + this.usia + " tahun");
+        System.out.println("Status: " + this.statusPasien);
     }
 
-    // Method fungsi (return value)
     public String getRingkasanPasien() {
-        return "[" + this.noRekamMedis + "] " + this.nama + " (" + this.statusPasien + ")";
+        return this.noRekamMedis + " - " + this.nama;
     }
 
-    // Abstract methods
     public abstract void prosesPemeriksaan(String keluhan);
     public abstract double hitungTotalBiaya();
 
-    // Getter dan Setter
     public String getNoRekamMedis() {
         return this.noRekamMedis;
     }
