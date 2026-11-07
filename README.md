@@ -49,7 +49,9 @@ java Main
 
 ---
 
-## 5. Luaran Program (Terminal Output)
+## 5. Luaran Program (Screenshot Output)
+
+![Screenshot Luaran Program](screenshot.png)
 
 ```text
 ======================================
