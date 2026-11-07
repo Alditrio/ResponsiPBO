@@ -23,4 +23,4 @@ d. Run menggunakan extension atau compailer.
 
 C. Luaran Program 
 
-
+<img src="screenshoot program.png" alt="Luaran Program">
